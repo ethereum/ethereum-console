@@ -6,6 +6,13 @@ module.exports = {
             property: 'admin',
             methods:
             [
+		new web3._extend.Method({
+                    name: 'addBlock',
+                    call: 'admin_addBlock',
+                    params: 1,
+                    inputFormatter: [web3._extend.utils.fromDecimal],
+                    outputFormatter: web3._extend.formatters.formatOutputBool
+                }),
                 new web3._extend.Method({
                     name: 'addPeer',
                     call: 'admin_addPeer',
@@ -257,6 +264,38 @@ module.exports = {
                     getter: 'txpool_status',
                     outputFormatter: function(obj) { return obj; }
                 })
+            ]
+        });
+
+	// TEST
+        web3._extend({
+            property: 'test',
+            methods:
+            [
+		new web3._extend.Method({
+                    name: 'mineBlocks',
+                    call: 'test_mineBlocks',
+                    params: 2,
+                    inputFormatter: [web3._extend.utils.formatInputInt, web3._extend.utils.formatInputInt],
+                    outputFormatter: web3._extend.formatters.formatOutputBool
+                }),
+		new web3._extend.Method({
+                    name: 'addBlock',
+                    call: 'test_addBlock',
+                    params: 1,
+                    inputFormatter: [web3._extend.utils.formatInputString],
+                    outputFormatter: web3._extend.formatters.formatOutputBool
+                }),
+		new web3._extend.Method({
+                    name: 'rewindToBlock',
+                    call: 'test_rewindToBlock',
+                    params: 1,
+                    inputFormatter: [web3._extend.utils.formatInputInt],
+                    outputFormatter: web3._extend.formatters.formatOutputBool
+                })
+            ],
+            properties:
+            [
             ]
         });
     }

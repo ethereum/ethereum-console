@@ -52,18 +52,29 @@ web3.eth.getBlockNumber(function(err, number)
 	}
 });
 
+function startsWith(str, arg)
+{
+	return str.indexOf(arg) == 0;
+}
+
+function endsWith(str, arg)
+{
+    return str.indexOf(arg, str.length - arg.length) !== -1;
+}
+
+
 function processArguments()
 {
 	var notRecognized = false;
 	for (var k = 2; k < process.argv.length; k++)
 	{
 		var arg = process.argv[k];
-		if (arg.endsWith('.js'))
+		if (endsWith(arg, '.js'))
 			jsScript = arg;
 		else if (arg === "help" || arg === "--help" || arg === "-h")
 			help = true;
-		else if (arg.startsWith("ipc:") || arg.endsWith(".ipc"))
-			ipcPath = arg.startsWith("ipc:") ? arg.substring(4) : arg;
+		else if (startsWith(arg,"ipc:") || endsWith(arg,".ipc"))
+			ipcPath = startsWith(arg,"ipc:") ? arg.substring(4) : arg;
 		else
 		{
 			notRecognized = true;

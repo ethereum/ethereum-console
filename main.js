@@ -38,7 +38,6 @@ web3admin.extend(web3);
 
 global.web3 = web3;
 global.utils = require('./utils.js');
-global.proces = require('process');
 
 web3.eth.getBlockNumber(function(err, number)
 {

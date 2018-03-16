@@ -1,6 +1,6 @@
 {
   "name": "ethereum-console",
-  "version": "0.0.4",
+  "version": "1.0.0",
   "description": "Commandline console for Ethereum nodes",
   "main": "main.js",
   "bin": {
@@ -18,13 +18,27 @@
     "ethereum",
     "web3"
   ],
-  "author": "Christian Reitwiessner <c@ethdev.com>",
+  "author": "Ethereum Foundation",
+  "authors": [
+    {
+      "name": "Christian Reitwiessner",
+      "email": "c@ethereum.org",
+      "url": "https://github.com/chriseth"
+    },
+    {
+      "name": "Fabian Vogelsteller",
+      "email": "fabian@ethereum.org",
+      "homepage": "http://frozeman.de"
+    }
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/ethereum/ethereum-console/issues"
   },
   "dependencies": {
-    "web3": "~0.15.3",
-    "es6-shim": "^0.35.1"
+    "es6-shim": "^0.35.1",
+    "moment": "^2.21.0",
+    "repl-promised": "^0.1.0",
+    "web3": "1.0.0-beta.31"
   }
 }

@@ -7,14 +7,20 @@
 	- a path which target an ipc path.
 */
 
-var Web3 = require('web3');
-var web3admin = require('./web3Admin.js');
-var repl = require('repl');
+
 var net = require('net');
+var repl = require('repl');
+var promisify = require("repl-promised").promisify;
+var moment = require('moment');
 var fs = require('fs')
 var vm = require('vm');
 var ipcpath = require('./getIpcPath.js');
 require('es6-shim');
+
+var Web3 = require('web3');
+var web3Extensions = require('./web3Extensions.js');
+
+global.utils = require('./utils.js');
 
 var ipcPath = ipcpath();
 var jsScript;
@@ -22,9 +28,14 @@ var help = false;
 if (!processArguments())
 	return;
 
-if (help)
-{
-	logHelp();
+if (help) {
+	console.log("Usage: ethconsole [JavaScript file] [IPC socket]\n\n" +
+		"web3.js based Ethereum console that connects to local running node via IPC.\n" +
+		"Default IPC path: " + ipcpath() + "\n\n" +
+		"Arguments:\n" +
+		"	<JavaScript file>	execute the given JavaScript file non-interactively.\n" +
+		"				The script has to call process.exit() in order to terminate the console.\n"+
+		"	<IPC socket path>	connect to the given IPC socket (use ipc://<path> if path does not end with \".ipc\")\n");
 	return;
 }
 
@@ -32,34 +43,43 @@ process.on('uncaughtException', function(err) {
 	console.error("Uncaught exception: " + err);
 });
 
-console.log("Connecting to node at " + ipcPath);
+console.log("ETHEREUM CONSOLE");
+
+console.log("Connecting to node at " + ipcPath + " ...");
+
 var web3 = new Web3(new Web3.providers.IpcProvider(ipcPath, net));
-web3admin.extend(web3);
-
+web3Extensions.extend(web3);
 global.web3 = web3;
-global.utils = require('./utils.js');
-global.proces = require('process');
 
-web3.eth.getBlockNumber(function(err, number)
-{
-	if (err)
-		console.error("Could not connect to node. Please start an Ethereum node first.");
-	else
-	{
-		console.log("Connection successful.");
-		console.log("Current block number: " + number);
-		if (jsScript)
-			executeScript();
-		else
-		{
-			console.log("Entering interactive mode.");
-			repl.start({
-				prompt: "> ",
-				input: process.stdin,
-				output: process.stdout
-			});
-		}
+
+web3.eth.net.getNetworkType()
+.then(function(type){
+	console.log("Connection successful!\n");
+
+	console.log("ΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞ");
+	console.log("Network: " + type.toUpperCase());
+	return web3.eth.getBlock('latest');
+})
+.then(function(block) {
+	console.log("Current block: " + block.number + " ("+ moment.unix(block.timestamp).format('MMMM Do YYYY, HH:mm:ss') +")");
+})
+.then(function(){
+
+console.log("ΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞ\n");
+
+	if (jsScript)
+		executeScript();
+	else {
+		promisify(repl.start({
+			prompt: "> ",
+			input: process.stdin,
+			output: process.stdout
+		}));
 	}
+})
+.catch(function(e){
+	console.error("Could not connect to node. Please start an Ethereum node first.");
+	console.error(e);
 });
 
 function processArguments()
@@ -104,18 +124,4 @@ function executeScript()
 			script.runInThisContext();
 		}
 	});
-}
-
-function logHelp()
-{
-	var help = "Usage: ethconsole [javascript file] [ipc socket]\n" +
-			"Connects to an ethereum node via ipc in order to control it remotely\n" +
-			"through global variable web3 (web3.admin is also present).\n" +
-			"If no arguments are given, connects to the ipc socket at " + ipcpath() + "\n" +
-			"and drops into interactive mode.\n" +
-			"Arguments:\n" +
-			"	<ipc socket path>	connect to the given ipc socket (use ipc://<path> if it does not end with .ipc)\n" +
-			"	<javascript file>	execute the given javascript file that has to end in .js non-interactively.\n" +
-			"				The script has to call process.exit() in order to terminate the console.\n"
-	console.log(help);
 }

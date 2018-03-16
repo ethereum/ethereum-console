@@ -79,7 +79,9 @@ console.log("ΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞ�
 })
 .catch(function(e){
 	console.error("Could not connect to node. Please start an Ethereum node first.");
-	console.error(e);
+	console.error(String(e));
+	console.log('Exit due to error.');
+	process.exit();
 });
 
 function processArguments()

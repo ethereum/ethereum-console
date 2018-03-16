@@ -20,8 +20,6 @@ require('es6-shim');
 var Web3 = require('web3');
 var web3Extensions = require('./web3Extensions.js');
 
-global.utils = require('./utils.js');
-
 var ipcPath = ipcpath();
 var jsScript;
 var help = false;

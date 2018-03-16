@@ -384,23 +384,12 @@ module.exports = {
         web3.extend({
             property: 'eth',
             methods: [
-                {
-                    name: 'sign',
-                    call: 'eth_sign',
-                    params: 2,
-                    inputFormatter: [web3.extend.formatters.inputAddressFormatter, null]
-                },
+
                 {
                     name: 'resend',
                     call: 'eth_resend',
                     params: 3,
                     inputFormatter: [web3.extend.formatters.inputTransactionFormatter, web3.utils.fromDecimal, web3.utils.fromDecimal]
-                },
-                {
-                    name: 'signTransaction',
-                    call: 'eth_signTransaction',
-                    params: 1,
-                    inputFormatter: [web3.extend.formatters.inputTransactionFormatter]
                 },
                 {
                     name: 'submitTransaction',
@@ -475,58 +464,48 @@ module.exports = {
             properties: []
         });
 
-        web3.extend({
-            property: 'net',
-            methods: [
-                {
-                    name: 'version',
-                    call: 'net_version'
-                },
-            ]
-        });
 
-
-        web3.extend({
-            property: 'personal',
-            methods: [
-                {
-                    name: 'importRawKey',
-                    call: 'personal_importRawKey',
-                    params: 2
-                },
-                {
-                    name: 'sign',
-                    call: 'personal_sign',
-                    params: 3,
-                    inputFormatter: [null, web3.extend.formatters.inputAddressFormatter, null]
-                },
-                {
-                    name: 'ecRecover',
-                    call: 'personal_ecRecover',
-                    params: 2
-                },
-                {
-                    name: 'openWallet',
-                    call: 'personal_openWallet',
-                    params: 2
-                },
-                {
-                    name: 'deriveAccount',
-                    call: 'personal_deriveAccount',
-                    params: 3
-                },
-                {
-                    name: 'signTransaction',
-                    call: 'personal_signTransaction',
-                    params: 2,
-                    inputFormatter: [web3.extend.formatters.inputTransactionFormatter, null]
-                },
-                {
-                    name: 'listWallets',
-                    call: 'personal_listWallets'
-                },
-            ]
-        })
+        // web3.extend({
+        //     property: 'personal',
+        //     methods: [
+        //         {
+        //             name: 'importRawKey',
+        //             call: 'personal_importRawKey',
+        //             params: 2
+        //         },
+        //         {
+        //             name: 'sign',
+        //             call: 'personal_sign',
+        //             params: 3,
+        //             inputFormatter: [null, web3.extend.formatters.inputAddressFormatter, null]
+        //         },
+        //         {
+        //             name: 'ecRecover',
+        //             call: 'personal_ecRecover',
+        //             params: 2
+        //         },
+        //         {
+        //             name: 'openWallet',
+        //             call: 'personal_openWallet',
+        //             params: 2
+        //         },
+        //         {
+        //             name: 'deriveAccount',
+        //             call: 'personal_deriveAccount',
+        //             params: 3
+        //         },
+        //         {
+        //             name: 'signTransaction',
+        //             call: 'personal_signTransaction',
+        //             params: 2,
+        //             inputFormatter: [web3.extend.formatters.inputTransactionFormatter, null]
+        //         },
+        //         {
+        //             name: 'listWallets',
+        //             call: 'personal_listWallets'
+        //         },
+        //     ]
+        // })
 
 
         web3.extend({
@@ -539,21 +518,6 @@ module.exports = {
             ]
         });
 
-
-        web3.extend({
-            property: 'shh',
-            methods: [
-                {
-                    name: 'version',
-                    call: 'shh_version',
-                    outputFormatter: web3.utils.toDecimal
-                },
-                {
-                    name: 'info',
-                    call: 'shh_info'
-                },
-            ]
-        });
 
 
         web3.extend({

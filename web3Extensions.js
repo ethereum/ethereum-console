@@ -30,6 +30,7 @@
 //     "txpool":     TxPool_JS,
 // }
 
+
 module.exports = {
     extend: function(web3, global) {
 
@@ -555,6 +556,7 @@ module.exports = {
                 },
             ]
         });
+
 
 
         ['txpool','swarmfs','rpc','miner','debug','admin','chequebook'].forEach(function(type) {

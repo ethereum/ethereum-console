@@ -2,29 +2,34 @@
 
 Commandline console for Ethereum nodes.
 
-`ethconsole` connects to an Ethereum node running in the background (tested with eth and geth) via IPC
-and provides an interactive javascript console containing the `web3` object with admin additions.
+`ethconsole` connects to a running Ethereum node via IPC/WS/HTTP
+and provides an interactive javascript console containing the `web3` (1.x) object with admin extensions.
 
-Note that the admin additions are not yet official and may change any time.
+Note that the admin/debug additions are not yet official and may change over time.
+
+Run `$ ethconsole --help` for help.
 
 ## Installation / Usage
 
-    # npm install -g ethereum-console
-    npm http GET https://registry.npmjs.org/ethereum-console
-    npm http 304 https://registry.npmjs.org/ethereum-console
-    npm http GET https://registry.npmjs.org/web3
+    $ npm install -g ethereum-console
     ...
-    # ethconsole
-    Connecting to node at /home/user/.ethereum/geth.ipc
-    Connection successful.
-    Current block number: 1083107
-    Entering interactive mode.
-    > web3.admin.getNodeInfo(function(err, info) { console.log(info.name); } )
-    eth/v1.2.0-2192c209/Debug-Linux/clang/int
 
-## Usage of the Test Interface
+    $ ethconsole
+    ETHEREUM CONSOLE
+    Connecting to node at /Users/frozeman/Library/Ethereum/geth.ipc ...
+    Connection successful!
 
-ethconsole provides access to the cpp-ethereum test interface, which can
+    ΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞ
+    Network: MAIN
+    Current block: 5284889 [0xb57031], March 19th 2018, 20:15:03
+    ΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞ
+
+    > web3.admin.nodeInfo()
+    ...
+
+### CPP Ethereum Test Interface
+
+`ethconsole` provides access to the cpp-ethereum test interface, which can
 be used to test smart contracts that depend on timing and blocks being
 mined.
 
@@ -39,13 +44,13 @@ mined.
     $ eth --test -d /tmp/test &
     # Wait for it to start up...
     # Run the example:
-    $ ethconsole /tmp/test/geth.ipc example.js
+    $ ethconsole /tmp/test/geth.ipc cppTestExample.js
 
 These testing interfaces exist in cpp-ethereum:
 
     web3.test.setChainParams({}, cb(err, bool))
         set chain parameters using the json chain description
-        you can use the function chainParams in utils.js to create such a description
+        you can use the function chainParams() from the cppTestExample.js to create such a description
     web3.test.mineBlocks(x, cb(err, bool))
         start mining and stop again after exactly x blocks
     web3.test.modifyTimestamp(x, cb(err, bool))

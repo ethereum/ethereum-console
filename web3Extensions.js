@@ -30,6 +30,7 @@
 //     "txpool":     TxPool_JS,
 // }
 
+
 module.exports = {
     extend: function(web3, global) {
 
@@ -553,6 +554,48 @@ module.exports = {
                         return status;
                     }
                 },
+            ]
+        });
+
+
+        web3.extend({
+            property: 'test',
+            methods:
+            [
+                {
+                    name: 'setChainParams',
+                    call: 'test_setChainParams',
+                    params: 1,
+                    outputFormatter: web3.extend.formatters.formatOutputBool
+                },
+                {
+                    name: 'mineBlocks',
+                    call: 'test_mineBlocks',
+                    params: 1,
+                    inputFormatter: [web3.extend.utils.formatInputInt],
+                    outputFormatter: web3.extend.formatters.formatOutputBool
+                },
+                {
+                    name: 'modifyTimestamp',
+                    call: 'test_modifyTimestamp',
+                    params: 1,
+                    inputFormatter: [web3.extend.utils.formatInputInt],
+                    outputFormatter: web3.extend.formatters.formatOutputBool
+                },
+                {
+                    name: 'addBlock',
+                    call: 'test_addBlock',
+                    params: 1,
+                    inputFormatter: [web3.extend.utils.formatInputString],
+                    outputFormatter: web3.extend.formatters.formatOutputBool
+                },
+                {
+                    name: 'rewindToBlock',
+                    call: 'test_rewindToBlock',
+                    params: 1,
+                    inputFormatter: [web3.extend.utils.formatInputInt],
+                    outputFormatter: web3.extend.formatters.formatOutputBool
+                }
             ]
         });
 

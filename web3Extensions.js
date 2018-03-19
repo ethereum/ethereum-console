@@ -558,7 +558,6 @@ module.exports = {
         });
 
 
-
         ['txpool','swarmfs','rpc','miner','debug','admin','chequebook'].forEach(function(type) {
             global[type] = web3[type];
         });

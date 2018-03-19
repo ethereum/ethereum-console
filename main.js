@@ -60,6 +60,10 @@ if (wsPath) {
 console.log("ETHEREUM CONSOLE");
 console.log("Connecting to node at " + providerPath + " ...");
 
+if (wsPath || httpPath) {
+	console.log("\nWARNING! You're connecting through an unsecure connection!\nUsing this console API allows you to send passwords over this connection,\nplease make sure to secure your connection to prevent loss of funds!\n");
+}
+
 var web3 = new Web3(provider);
 web3Extensions.extend(web3);
 global.web3 = web3;

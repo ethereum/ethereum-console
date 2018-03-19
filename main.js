@@ -20,29 +20,11 @@ require('es6-shim');
 var Web3 = require('web3');
 var web3Extensions = require('./web3Extensions.js');
 
+// Arguments
 var ipcPath = ipcpath();
-var wsPath, httpPath;
-var jsScript;
-var help = false;
-if (!processArguments()) {
-	return;
-}
+var wsPath, httpPath, jsScript;
+processArguments();
 
-if (help) {
-	console.log("Usage: ethconsole [connection] [JavaScript file]\n\n" +
-		"web3.js based Ethereum console that connects to local running node via IPC.\n" +
-		"Default IPC path: " + ipcpath() + "\n\n" +
-		"Arguments:\n" +
-		"<connection>	connect to a Websocket (ws://...), HTTP endpoint (http://..), or IPC socket (use ipc://<path> if path does not end with \".ipc\").\n"+
-		"		Defaults to the default IPC endpoint for geth.\n"+
-		"<JavaScript file>	execute the given JavaScript file non-interactively.\n" +
-		"			The script has to call process.exit() in order to terminate the console.\n");
-	return;
-}
-
-process.on('uncaughtException', function(err) {
-	console.error("Uncaught exception: " + err);
-});
 
 // select provider
 var provider, providerPath;
@@ -57,11 +39,18 @@ if (wsPath) {
 	provider = new Web3.providers.IpcProvider(providerPath, net);
 }
 
+process.on('uncaughtException', function(err) {
+	console.error("Uncaught exception: " + err);
+});
+
 console.log("ETHEREUM CONSOLE");
 console.log("Connecting to node at " + providerPath + " ...");
 
 if (wsPath || httpPath) {
-	console.log("\nWARNING! You're connecting through an unsecure connection!\nUsing this console API allows you to send passwords over this connection,\nplease make sure to secure your connection to prevent loss of funds!\n");
+	console.log("\nWARNING! You're connecting through an unsecure connection!\n"+
+		"Using this console API allows you to send passwords over this connection,\n"+
+		"please make sure to secure your connection to prevent loss of funds!\n\n"+
+		"Additionally you need to activate in your node extra debug APIs manually.\n");
 }
 
 var web3 = new Web3(provider);
@@ -85,7 +74,7 @@ web3.eth.net.getNetworkType()
 console.log("ΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞ\n");
 
 	if (jsScript)
-		executeScript();
+		executeScript(jsScript);
 	else {
 		promisify(repl.start({
 			prompt: "> ",
@@ -95,57 +84,58 @@ console.log("ΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞ�
 	}
 })
 .catch(function(e){
-	console.error("Could not connect to node. Please start an Ethereum node first.");
+	console.error("\nERROR");
 	console.error(String(e));
 	console.log('Exit due to error.');
 	process.exit();
 });
 
+
 function processArguments()
 {
-	var notRecognized = false;
-	for (var k = 2; k < process.argv.length; k++)
-	{
+	for (var k = 2; k < process.argv.length; k++) {
 		var arg = process.argv[k];
 
 		if (arg === "help" || arg === "--help" || arg === "-h")
-			help = true;
+			help();
 		else if (arg.startsWith("ipc:") || arg.endsWith(".ipc"))
 			ipcPath = arg.startsWith("ipc:") ? arg.substring(4) : arg;
 		else if (arg.startsWith("ws://"))
 			wsPath = arg;
 		else if (arg.startsWith("http://") || arg.startsWith("https://"))
 			httpPath = arg;
-		else
+		else if (arg.endsWith(".js"))
 			jsScript = arg;
-		// else
-		// {
-		// 	notRecognized = true;
-		// 	console.log("Argument not recognized " + arg);
-		// }
-	}
-	if (notRecognized)
-	{
-		logHelp();
-		return false;
-	}
-	return true;
-}
-
-function executeScript()
-{
-	console.log("Executing " + jsScript + " ...");
-	fs.readFile(jsScript, 'utf8', function (err, data)
-	{
-		if (err)
-		{
-			console.log(err);
+		else {
+			console.log("Argument not recognized: " + arg +"\n");
+			help();
 			process.exit();
 		}
-		else
-		{
+	}
+}
+
+function executeScript(jsScript) {
+	console.log("Executing " + jsScript + " ...\n");
+
+	fs.readFile(jsScript, 'utf8', function (err, data) {
+		if (err) {
+			console.log(err);
+			process.exit();
+		} else {
 			var script = new vm.Script(data);
 			script.runInThisContext();
 		}
 	});
+}
+
+function help(){
+	console.log(
+		"web3.js based console that connects to an Ethereum node via IPC/WS/HTTP.\n" +
+		"Defaults to IPC path: " + ipcpath() + "\n\n" +
+		"Usage: ethconsole <connection> <JavaScript file>\n\n" +
+		"Arguments:\n" +
+		"<connection>	connect to a Websocket (ws://...), HTTP endpoint (http://..), or IPC socket (use ipc://<path> if path does not end with \".ipc\").\n"+
+		"		Defaults to the default IPC endpoint for geth.\n"+
+		"<JavaScript file>	execute the given JavaScript file non-interactively.\n" +
+		"			The script has to call process.exit() in order to terminate the console.\n");
 }

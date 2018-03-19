@@ -68,20 +68,26 @@ web3.eth.net.getNetworkType()
 .then(function(type){
 	console.log("Connection successful!\n");
 
-	console.log("ΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞ");
+	console.log("ΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞ");
 	console.log("Network: " + type.toUpperCase());
 	return web3.eth.getBlock('latest');
 })
 .then(function(block) {
-	console.log("Current block: " + block.number + " ("+ moment.unix(block.timestamp).format('MMMM Do YYYY, HH:mm:ss') +")");
+	console.log("Current block: "+ block.number + " [" + block.hash.substr(0,8) +"], "+ moment.unix(block.timestamp).format('MMMM Do YYYY, HH:mm:ss') +"");
 })
 .then(function(){
 
-console.log("ΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞ\n");
+console.log("ΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞ\n");
 
 	if (jsScript)
 		executeScript(jsScript);
 	else {
+
+		// log latest block
+		// web3.eth.subscribe('newBlockHeaders', function(error, block){
+		// 	console.log("Block "+ block.hash.substr(0,8) +" arrived: " + block.number + " ("+ moment.unix(block.timestamp).format('MMMM Do YYYY, HH:mm:ss') +")");
+		// });
+
 		promisify(repl.start({
 			prompt: "> ",
 			input: process.stdin,

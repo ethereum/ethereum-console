@@ -465,47 +465,37 @@ module.exports = {
         });
 
 
-        // web3.extend({
-        //     property: 'personal',
-        //     methods: [
-        //         {
-        //             name: 'importRawKey',
-        //             call: 'personal_importRawKey',
-        //             params: 2
-        //         },
-        //         {
-        //             name: 'sign',
-        //             call: 'personal_sign',
-        //             params: 3,
-        //             inputFormatter: [null, web3.extend.formatters.inputAddressFormatter, null]
-        //         },
-        //         {
-        //             name: 'ecRecover',
-        //             call: 'personal_ecRecover',
-        //             params: 2
-        //         },
-        //         {
-        //             name: 'openWallet',
-        //             call: 'personal_openWallet',
-        //             params: 2
-        //         },
-        //         {
-        //             name: 'deriveAccount',
-        //             call: 'personal_deriveAccount',
-        //             params: 3
-        //         },
-        //         {
-        //             name: 'signTransaction',
-        //             call: 'personal_signTransaction',
-        //             params: 2,
-        //             inputFormatter: [web3.extend.formatters.inputTransactionFormatter, null]
-        //         },
-        //         {
-        //             name: 'listWallets',
-        //             call: 'personal_listWallets'
-        //         },
-        //     ]
-        // })
+        web3.extend({
+            property: 'personal',
+            methods: [
+                {
+                    name: 'importRawKey',
+                    call: 'personal_importRawKey',
+                    params: 2
+                },
+                {
+                    name: 'openWallet',
+                    call: 'personal_openWallet',
+                    params: 2
+                },
+                {
+                    name: 'deriveAccount',
+                    call: 'personal_deriveAccount',
+                    params: 3
+                },
+                // Remove after web3.js release
+                {
+                    name: 'signTransaction',
+                    call: 'personal_signTransaction',
+                    params: 2,
+                    inputFormatter: [web3.extend.formatters.inputTransactionFormatter, null]
+                },
+                {
+                    name: 'listWallets',
+                    call: 'personal_listWallets'
+                },
+            ]
+        })
 
 
         web3.extend({

@@ -44,7 +44,7 @@ process.on('uncaughtException', function(err) {
 });
 
 console.log("ETHEREUM CONSOLE");
-console.log("Connecting to node at " + providerPath + " ...");
+console.log("Connecting to node at " + providerPath);
 
 if (wsPath || httpPath) {
 	console.log("\nWARNING! You're connecting through an unsecure connection!\n"+
@@ -66,7 +66,10 @@ global.web3 = web3;
 
 web3.eth.net.getNetworkType()
 .then(function(type){
-	console.log("Connection successful!\n");
+	console.log("... Connection successful!\n");
+
+	console.log("Use the \"web3\" object to interact.\nYou can find the documentation here: http://web3js.readthedocs.io/en/1.0/\n");
+
 
 	console.log("ΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞ");
 	console.log("Network: " + type.toUpperCase());

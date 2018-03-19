@@ -21,19 +21,22 @@ var Web3 = require('web3');
 var web3Extensions = require('./web3Extensions.js');
 
 var ipcPath = ipcpath();
+var wsPath, httpPath;
 var jsScript;
 var help = false;
-if (!processArguments())
+if (!processArguments()) {
 	return;
+}
 
 if (help) {
-	console.log("Usage: ethconsole [JavaScript file] [IPC socket]\n\n" +
+	console.log("Usage: ethconsole [connection] [JavaScript file]\n\n" +
 		"web3.js based Ethereum console that connects to local running node via IPC.\n" +
 		"Default IPC path: " + ipcpath() + "\n\n" +
 		"Arguments:\n" +
-		"	<JavaScript file>	execute the given JavaScript file non-interactively.\n" +
-		"				The script has to call process.exit() in order to terminate the console.\n"+
-		"	<IPC socket path>	connect to the given IPC socket (use ipc://<path> if path does not end with \".ipc\")\n");
+		"<connection>	connect to a Websocket (ws://...), HTTP endpoint (http://..), or IPC socket (use ipc://<path> if path does not end with \".ipc\").\n"+
+		"		Defaults to the default IPC endpoint for geth.\n"+
+		"<JavaScript file>	execute the given JavaScript file non-interactively.\n" +
+		"			The script has to call process.exit() in order to terminate the console.\n");
 	return;
 }
 
@@ -41,11 +44,23 @@ process.on('uncaughtException', function(err) {
 	console.error("Uncaught exception: " + err);
 });
 
+// select provider
+var provider, providerPath;
+if (wsPath) {
+	providerPath = wsPath;
+	provider = new Web3.providers.WebsocketProvider(providerPath);
+} else if (httpPath) {
+	providerPath = httpPath;
+	provider = new Web3.providers.HttpProvider(providerPath);
+} else if (ipcPath) {
+	providerPath = ipcPath;
+	provider = new Web3.providers.IpcProvider(providerPath, net);
+}
+
 console.log("ETHEREUM CONSOLE");
+console.log("Connecting to node at " + providerPath + " ...");
 
-console.log("Connecting to node at " + ipcPath + " ...");
-
-var web3 = new Web3(new Web3.providers.IpcProvider(ipcPath, net));
+var web3 = new Web3(provider);
 web3Extensions.extend(web3);
 global.web3 = web3;
 
@@ -88,17 +103,22 @@ function processArguments()
 	for (var k = 2; k < process.argv.length; k++)
 	{
 		var arg = process.argv[k];
-		if (arg.endsWith('.js'))
-			jsScript = arg;
-		else if (arg === "help" || arg === "--help" || arg === "-h")
+
+		if (arg === "help" || arg === "--help" || arg === "-h")
 			help = true;
 		else if (arg.startsWith("ipc:") || arg.endsWith(".ipc"))
 			ipcPath = arg.startsWith("ipc:") ? arg.substring(4) : arg;
+		else if (arg.startsWith("ws://"))
+			wsPath = arg;
+		else if (arg.startsWith("http://") || arg.startsWith("https://"))
+			httpPath = arg;
 		else
-		{
-			notRecognized = true;
-			console.log("Argument not recognized " + arg);
-		}
+			jsScript = arg;
+		// else
+		// {
+		// 	notRecognized = true;
+		// 	console.log("Argument not recognized " + arg);
+		// }
 	}
 	if (notRecognized)
 	{

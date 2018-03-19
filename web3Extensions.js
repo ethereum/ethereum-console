@@ -31,7 +31,7 @@
 // }
 
 module.exports = {
-    extend: function(web3) {
+    extend: function(web3, global) {
 
         web3.extend({
             property: 'chequebook',
@@ -465,7 +465,7 @@ module.exports = {
         });
 
 
-        web3.extend({
+        web3.eth.extend({
             property: 'personal',
             methods: [
                 {
@@ -555,5 +555,11 @@ module.exports = {
                 },
             ]
         });
+
+
+        ['txpool','swarmfs','rpc','miner','debug','admin','chequebook'].forEach(function(type) {
+            global[type] = web3[type];
+        });
+        global.personal = web3.eth.personal;
     }
 };

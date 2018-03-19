@@ -54,8 +54,14 @@ if (wsPath || httpPath) {
 }
 
 var web3 = new Web3(provider);
-web3Extensions.extend(web3);
+web3Extensions.extend(web3, global);
 global.web3 = web3;
+
+// attach main modules globally
+['eth','bzz','shh','utils'].forEach(function(type) {
+	global[type] = web3[type];
+});
+
 
 
 web3.eth.net.getNetworkType()

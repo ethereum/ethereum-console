@@ -1,6 +1,6 @@
 {
   "name": "ethereum-console",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Commandline console for Ethereum nodes",
   "main": "main.js",
   "bin": {

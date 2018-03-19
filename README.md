@@ -16,7 +16,7 @@ Run `$ ethconsole --help` for help.
 
     $ ethconsole
     ETHEREUM CONSOLE
-    Connecting to node at /Users/frozeman/Library/Ethereum/geth.ipc ...
+    Connecting to node at /Users/xyz/Library/Ethereum/geth.ipc ...
     Connection successful!
 
     ΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞ
